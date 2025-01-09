@@ -1,14 +1,11 @@
 package com.harshapps.codetogether.handler;
 
+import org.springframework.web.socket.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.web.socket.*;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
-
-// Socket-Connection Configuration class
 public class SocketConnectionHandler implements WebSocketHandler {
 
     // In this list all the connections will be stored
