@@ -4,13 +4,12 @@ package com.harshapps.codetogether.handler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.WebSocketMessage;
-import org.springframework.web.socket.WebSocketSession;
+
+import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 // Socket-Connection Configuration class
-public class SocketConnectionHandler extends TextWebSocketHandler {
+public class SocketConnectionHandler implements WebSocketHandler {
 
     // In this list all the connections will be stored
     // Then it will be used to broadcast the message
@@ -25,7 +24,6 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
             throws Exception
     {
 
-        super.afterConnectionEstablished(session);
         // Logging the connection ID with Connected Message
         System.out.println(session.getId() + " Connected");
 
@@ -39,12 +37,16 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session,
                                       CloseStatus status)throws Exception
     {
-        super.afterConnectionClosed(session, status);
         System.out.println(session.getId()
                 + " DisConnected");
 
         // Removing the connection info from the list
         webSocketSessions.remove(session);
+    }
+
+    @Override
+    public boolean supportsPartialMessages() {
+        return false;
     }
 
     // It will handle exchanging of message in the network
@@ -56,7 +58,7 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
             throws Exception
     {
 
-        super.handleMessage(session, message);
+//        super.handleMessage(session, message);
 
         // Iterate through the list and pass the message to
         // all the sessions Ignore the session in the list
@@ -68,7 +70,12 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
 
             // sendMessage is used to send the message to
             // the session
-            webSocketSession.sendMessage(message);
+            webSocketSession.sendMessage(new TextMessage("Echo: " + message.getPayload()));
         }
+    }
+
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        System.err.println("Transport error: " + exception.getMessage());
     }
 }
