@@ -92,7 +92,7 @@ jobs:
 
     - name: SSH into EC2 and restart application
       run: |
-        ssh -i /path/to/your/aws-key.pem ec2-user@3.109.3.103 << 'EOF'
+        ssh -i aws-key.pem ec2-user@3.109.3.103 << 'EOF'
         cd /home/ec2-user/
         pkill -f java || true
         nohup java -jar /home/ec2-user/codetogether-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
