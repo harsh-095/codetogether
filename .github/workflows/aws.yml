@@ -64,6 +64,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Add EC2 host to known_hosts
+      run: |
+        ssh-keyscan -H 3.109.3.103 >> ~/.ssh/known_hosts
     - name: Create .pem file
       run: echo "${{ secrets.AWS_KEY_PEM }}" > aws-key.pem
 
@@ -84,6 +87,7 @@ jobs:
         name: codetogether-jar
     - name: Verify ls
       run: ls
+
       
     - name: Transfer JAR to EC2
       run: |
