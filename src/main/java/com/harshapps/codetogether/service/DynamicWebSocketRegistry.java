@@ -32,7 +32,7 @@ public class DynamicWebSocketRegistry {
 
         // Dynamically add the endpoint to the handlerMapping
         Map<String, Object> urlMap = (Map<String, Object>) handlerMapping.getUrlMap();
-        urlMap.put("/" + socketName, requestHandler);
+        urlMap.put("/chat/" + socketName, requestHandler);
         handlerMapping.setUrlMap(urlMap);
         handlerMapping.initApplicationContext(); // Reinitialize to apply changes
 

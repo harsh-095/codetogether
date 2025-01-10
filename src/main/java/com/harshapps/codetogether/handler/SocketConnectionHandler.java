@@ -67,7 +67,7 @@ public class SocketConnectionHandler implements WebSocketHandler {
 
             // sendMessage is used to send the message to
             // the session
-            webSocketSession.sendMessage(new TextMessage("Echo: " + message.getPayload()));
+            webSocketSession.sendMessage(new TextMessage(""+message.getPayload()));
         }
     }
 
