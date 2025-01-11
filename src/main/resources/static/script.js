@@ -6,6 +6,8 @@ const serverAddress= '3.109.3.103';
 const serverPort= 9000;
 
 
+let isUpdatingFromServer = false; // Flag to avoid triggering 'input' event during updates
+
 // Event Listener for the Connect Button
 connectButton.addEventListener('click', async () => {
     const socketName = socketNameInput.value.trim();
@@ -55,8 +57,14 @@ function connectToSocket(socketName) {
     };
 
     socket.onmessage = (event) => {
-        // Update editor with received message
-        editor.value = event.data;
+        const data = JSON.parse(event.data); // Parse received data
+
+        // Handle incoming updates
+        if (data.type === 'update') {
+            isUpdatingFromServer = true; // Avoid triggering input event
+            editor.value = data.content; // Update editor content
+            isUpdatingFromServer = false;
+        }
     };
 
     socket.onclose = () => {
@@ -71,8 +79,12 @@ function connectToSocket(socketName) {
 
     // Broadcast editor changes to the server
     editor.addEventListener('input', () => {
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(editor.value);
+        if (!isUpdatingFromServer && socket && socket.readyState === WebSocket.OPEN) {
+            const update = {
+                type: 'update',
+                content: editor.value, // Send the current editor content
+            };
+            socket.send(JSON.stringify(update)); // Send update to server
         }
     });
 }

@@ -1,10 +1,13 @@
 package com.harshapps.codetogether.handler;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.socket.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class SocketConnectionHandler implements WebSocketHandler {
 
@@ -60,6 +63,12 @@ public class SocketConnectionHandler implements WebSocketHandler {
         // Iterate through the list and pass the message to
         // all the sessions Ignore the session in the list
         // which wants to send the message.
+        String editorContent;
+        String payload = ""+message.getPayload();
+        Map<String, String> data = new ObjectMapper().readValue(payload, new TypeReference<>() {});
+        if ("update".equals(data.get("type"))) {
+            editorContent = data.get("content");
+        }
         for (WebSocketSession webSocketSession :
                 webSocketSessions) {
             if (session == webSocketSession)
