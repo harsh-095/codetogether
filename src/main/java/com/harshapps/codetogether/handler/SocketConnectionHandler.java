@@ -63,7 +63,7 @@ public class SocketConnectionHandler implements WebSocketHandler {
         // Iterate through the list and pass the message to
         // all the sessions Ignore the session in the list
         // which wants to send the message.
-        String editorContent;
+        String editorContent = "";
         String payload = ""+message.getPayload();
         Map<String, String> data = new ObjectMapper().readValue(payload, new TypeReference<>() {});
         if ("update".equals(data.get("type"))) {
@@ -76,7 +76,7 @@ public class SocketConnectionHandler implements WebSocketHandler {
 
             // sendMessage is used to send the message to
             // the session
-            webSocketSession.sendMessage(new TextMessage(""+message.getPayload()));
+            webSocketSession.sendMessage(new TextMessage(payload));
         }
     }
 
