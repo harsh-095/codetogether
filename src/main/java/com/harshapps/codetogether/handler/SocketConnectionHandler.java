@@ -11,77 +11,75 @@ import java.util.Map;
 
 public class SocketConnectionHandler implements WebSocketHandler {
 
-    // In this list all the connections will be stored
-    // Then it will be used to broadcast the message
-    List<WebSocketSession> webSocketSessions
-            = Collections.synchronizedList(new ArrayList<>());
+    private final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
+    private WebSocketSession primarySession = null;
 
-    // This method is executed when client tries to connect
-    // to the sockets
     @Override
-    public void
-    afterConnectionEstablished(WebSocketSession session)
-            throws Exception
-    {
-
-        // Logging the connection ID with Connected Message
+    public void afterConnectionEstablished(WebSocketSession session) {
         System.out.println(session.getId() + " Connected");
-
-        // Adding the session into the list
         webSocketSessions.add(session);
+
+        // Assign the first session as the primary session
+        if (primarySession == null) {
+            primarySession = session;
+            sendToSession(session, Map.of("type", "SetPrimary"));
+        }
     }
 
-    // When client disconnect from WebSocket then this
-    // method is called
     @Override
-    public void afterConnectionClosed(WebSocketSession session,
-                                      CloseStatus status)throws Exception
-    {
-        System.out.println(session.getId()
-                + " DisConnected");
-
-        // Removing the connection info from the list
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        System.out.println(session.getId() + " Disconnected");
         webSocketSessions.remove(session);
+
+        // Handle primary session disconnection
+        if (primarySession == session) {
+            if (!webSocketSessions.isEmpty()) {
+                // Assign the next session as the primary session
+                primarySession = webSocketSessions.get(0);
+                sendToSession(primarySession, Map.of("type", "SetPrimary"));
+            } else {
+                primarySession = null; // No sessions left
+            }
+        }
+    }
+
+    @Override
+    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+        String payload = (String) message.getPayload();
+        Map<String, Object> data = new ObjectMapper().readValue(payload, new TypeReference<>() {});
+
+        if ("update".equals(data.get("type"))) {
+            if (session == primarySession) {
+                // Primary session sends full content to all other sessions
+                for (WebSocketSession webSocketSession : webSocketSessions) {
+                    if (webSocketSession != primarySession) {
+                        webSocketSession.sendMessage(new TextMessage(payload));
+                    }
+                }
+            } else {
+                // Other sessions send delta to the primary session
+                if (primarySession != null) {
+                    primarySession.sendMessage(new TextMessage(payload));
+                }
+            }
+        }
+    }
+
+    private void sendToSession(WebSocketSession session, Map<String, Object> data) {
+        try {
+            session.sendMessage(new TextMessage(new ObjectMapper().writeValueAsString(data)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception) {
+        System.err.println("Transport error: " + exception.getMessage());
     }
 
     @Override
     public boolean supportsPartialMessages() {
         return false;
-    }
-
-    // It will handle exchanging of message in the network
-    // It will have a session info who is sending the
-    // message Also the Message object passes as parameter
-    @Override
-    public void handleMessage(WebSocketSession session,
-                              WebSocketMessage<?> message)
-            throws Exception
-    {
-
-//        super.handleMessage(session, message);
-
-        // Iterate through the list and pass the message to
-        // all the sessions Ignore the session in the list
-        // which wants to send the message.
-        String editorContent = "";
-        String payload = ""+message.getPayload();
-        Map<String, String> data = new ObjectMapper().readValue(payload, new TypeReference<>() {});
-        if ("update".equals(data.get("type"))) {
-            editorContent = data.get("content");
-        }
-        for (WebSocketSession webSocketSession :
-                webSocketSessions) {
-            if (session == webSocketSession)
-                continue;
-
-            // sendMessage is used to send the message to
-            // the session
-            webSocketSession.sendMessage(new TextMessage(payload));
-        }
-    }
-
-    @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        System.err.println("Transport error: " + exception.getMessage());
     }
 }

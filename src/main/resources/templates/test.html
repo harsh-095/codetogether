@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+<!--    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />-->
+    <link th:href="@{/libs/quill/quill.snow.css}" rel="stylesheet">
+</head>
+<body>
+<div id="editor">
+    <p>Hello World!</p>
+    <p>Some initial <strong>bold</strong> text</p>
+    <p><br /></p>
+</div>
+
+<!-- Link to JavaScript -->
+<!--<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>-->
+<script th:src="@{/libs/quill/quill.js}"></script>
+
+<!-- Initialize Quill editor -->
+<script>
+    const quill = new Quill('#editor', {
+      theme: 'snow'
+    });
+    quill.on('text-change', function (delta) {
+//                console.log(quill.root.innerHTML);
+                console.log(delta);
+            });
+</script>
+</body>
+</html>

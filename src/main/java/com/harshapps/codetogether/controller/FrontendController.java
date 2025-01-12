@@ -10,5 +10,10 @@ public class FrontendController {
     public String index() {
         return "index"; // Returns templates/index.html
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "test"; // Returns templates/index.html
+    }
 }
 

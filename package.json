@@ -1,0 +1,13 @@
+{
+  "name": "spring-thymeleaf-app",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "shx cp -r ./node_modules/quill/dist src/main/resources/static/libs/quill"
+  },
+  "dependencies": {
+    "quill": "^2.0.3"
+  },
+  "devDependencies": {
+    "shx": "^0.3.4"
+  }
+}
