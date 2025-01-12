@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.socket.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,9 +14,10 @@ public class SocketConnectionHandler implements WebSocketHandler {
 
     private final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
     private WebSocketSession primarySession = null;
+    private WebSocketMessage<?> currentMessage = null;
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) {
+    public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         System.out.println(session.getId() + " Connected");
         webSocketSessions.add(session);
 
@@ -23,6 +25,11 @@ public class SocketConnectionHandler implements WebSocketHandler {
         if (primarySession == null) {
             primarySession = session;
             sendToSession(session, Map.of("type", "SetPrimary"));
+        }
+        else{
+            if(currentMessage!=null) {
+                session.sendMessage(new TextMessage((String)currentMessage.getPayload()));
+            }
         }
     }
 
@@ -38,7 +45,8 @@ public class SocketConnectionHandler implements WebSocketHandler {
                 primarySession = webSocketSessions.get(0);
                 sendToSession(primarySession, Map.of("type", "SetPrimary"));
             } else {
-                primarySession = null; // No sessions left
+                primarySession = null;
+                currentMessage = null;// No sessions left
             }
         }
     }
@@ -50,6 +58,7 @@ public class SocketConnectionHandler implements WebSocketHandler {
 
         if ("update".equals(data.get("type"))) {
             if (session == primarySession) {
+                currentMessage = message;
                 // Primary session sends full content to all other sessions
                 for (WebSocketSession webSocketSession : webSocketSessions) {
                     if (webSocketSession != primarySession) {
