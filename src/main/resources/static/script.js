@@ -92,7 +92,7 @@ function connectToSocket(socketName) {
 
     // Listen for text changes and broadcast deltas
     quill.on('text-change', (delta, oldDelta, source) => {
-          if (source == 'api') {
+          if (source == 'api' and !isPrimarySession) {
             return;
           }
         if (socket && socket.readyState === WebSocket.OPEN) {
