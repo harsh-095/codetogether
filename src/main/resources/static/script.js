@@ -1,7 +1,7 @@
 let socket;
 const connectButton = document.getElementById('connectButton');
 const socketNameInput = document.getElementById('socketName');
-const serverAddress = 'localhost';
+const serverAddress = '3.109.3.103';
 const serverPort = 9000;
 //import Quill from "quill";
 const Delta = Quill.import("delta");
