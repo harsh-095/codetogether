@@ -8,12 +8,32 @@ public class FrontendController {
 
     @GetMapping("/")
     public String index() {
-        return "index"; // Returns templates/index.html
+        return "index";
     }
 
     @GetMapping("/test")
     public String test() {
-        return "test"; // Returns templates/index.html
+        return "test";
+    }
+
+    @GetMapping("/home")
+    public String home() {
+        return "index";
+    }
+
+    @GetMapping("/code")
+    public String code() {
+        return "code";
+    }
+
+    @GetMapping("/chat")
+    public String chat() {
+        return "chat";
+    }
+
+    @GetMapping("/draw")
+    public String draw() {
+        return "draw";
     }
 }
 

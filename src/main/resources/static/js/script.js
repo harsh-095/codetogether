@@ -106,3 +106,13 @@ console.log(`SendingUpdate= ${JSON.stringify(update)}`);
     });
 
 }
+function toggleMenu() {
+    const menuContent = document.getElementById('menu-content');
+    if (menuContent.classList.contains('hidden')) {
+        menuContent.classList.remove('hidden');
+        menuContent.style.display = 'block';
+    } else {
+        menuContent.classList.add('hidden');
+        menuContent.style.display = 'none';
+    }
+}

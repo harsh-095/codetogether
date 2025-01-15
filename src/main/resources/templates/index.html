@@ -11,8 +11,34 @@
 <div id="toolbar">
     <button id="connectButton">Connect</button>
     <input id="socketName" placeholder="Enter Socket Name" />
+    <div id="hamburger-menu">
+        <div class="hamburger-icon" onclick="toggleMenu()">
+            &#9776; <!-- Unicode for hamburger icon -->
+        </div>
+        <div id="menu-content" class="hidden">
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/code">Code</a></li>
+                <li><a href="/chat">Chat</a></li>
+                <li><a href="/draw">Draw</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 <div id="editor"></div>
+<!--<div id="hamburger-menu">-->
+<!--    <div class="hamburger-icon" onclick="toggleMenu()">-->
+<!--        &#9776; &lt;!&ndash; Unicode for hamburger icon &ndash;&gt;-->
+<!--    </div>-->
+<!--    <div id="menu-content" class="hidden">-->
+<!--        <ul>-->
+<!--            <li><a href="/home">Home</a></li>-->
+<!--            <li><a href="/code">Code</a></li>-->
+<!--            <li><a href="/chat">Chat</a></li>-->
+<!--            <li><a href="/draw">Draw</a></li>-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--</div>-->
 <script th:src="@{/libs/quill/quill.js}"></script>
 <script th:src="@{js/script.js}"></script>
 </body>
