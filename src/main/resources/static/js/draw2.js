@@ -5,6 +5,7 @@ const serverAddress = '3.109.3.103';
 //const serverAddress = 'localhost';
 const serverPort = 9000;
 
+
 //Chunk map and chunk size
 const chunkMap= {};
 const chunkSize=5;
