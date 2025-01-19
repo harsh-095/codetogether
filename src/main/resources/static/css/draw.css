@@ -1,0 +1,131 @@
+/* General Page Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+}
+
+/* Page Heading */
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* Toolbar Styles */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar label {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: bold;
+}
+
+.toolbar input[type="color"],
+.toolbar input[type="range"],
+.toolbar input[type="text"],
+.toolbar button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.toolbar input[type="color"] {
+    width: 40px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.toolbar input[type="range"] {
+    width: 150px;
+    cursor: pointer;
+}
+
+.toolbar button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toolbar button:hover {
+    background-color: #0056b3;
+}
+
+#connectButton {
+    background-color: #28a745;
+}
+
+#connectButton:hover {
+    background-color: #218838;
+}
+
+#eraser {
+    background-color: #ffc107;
+}
+
+#eraser:hover {
+    background-color: #e0a800;
+}
+
+#reset {
+    background-color: #dc3545;
+}
+
+#reset:hover {
+    background-color: #c82333;
+}
+
+/* Drawing Container Styles */
+#container {
+    border: 2px solid #333;
+    width: 90%;
+    max-width: 900px;
+    height: 80vh;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .toolbar input[type="range"] {
+        width: 100%;
+    }
+
+    #container {
+        width: 90%;
+        height: 50vh;
+    }
+}

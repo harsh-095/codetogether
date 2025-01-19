@@ -1,5 +1,6 @@
 package com.harshapps.codetogether.service;
 
+import com.harshapps.codetogether.handler.ChatSocketConnectionHandler;
 import com.harshapps.codetogether.handler.SocketConnectionHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketHandler;
@@ -20,7 +21,26 @@ public class DynamicWebSocketRegistry {
         this.handlerMapping = handlerMapping;
     }
 
-    public synchronized boolean registerEndpoint(String socketName) {
+    public synchronized boolean registerCodeEndpoint(String socketName) {
+        if (handlers.containsKey(socketName)) {
+            return false; // Endpoint already exists
+        }
+
+        WebSocketHandler handler = new ChatSocketConnectionHandler();
+        WebSocketHttpRequestHandler requestHandler = new WebSocketHttpRequestHandler(handler, new DefaultHandshakeHandler());
+
+        handlers.put(socketName, requestHandler);
+
+        // Dynamically add the endpoint to the handlerMapping
+        Map<String, Object> urlMap = (Map<String, Object>) handlerMapping.getUrlMap();
+        urlMap.put("/code/" + socketName, requestHandler);
+        handlerMapping.setUrlMap(urlMap);
+        handlerMapping.initApplicationContext(); // Reinitialize to apply changes
+
+        return true;
+    }
+
+    public synchronized boolean registerDrawEndpoint(String socketName) {
         if (handlers.containsKey(socketName)) {
             return false; // Endpoint already exists
         }
@@ -29,10 +49,9 @@ public class DynamicWebSocketRegistry {
         WebSocketHttpRequestHandler requestHandler = new WebSocketHttpRequestHandler(handler, new DefaultHandshakeHandler());
 
         handlers.put(socketName, requestHandler);
-
         // Dynamically add the endpoint to the handlerMapping
         Map<String, Object> urlMap = (Map<String, Object>) handlerMapping.getUrlMap();
-        urlMap.put("/chat/" + socketName, requestHandler);
+        urlMap.put("/draw/" + socketName, requestHandler);
         handlerMapping.setUrlMap(urlMap);
         handlerMapping.initApplicationContext(); // Reinitialize to apply changes
 

@@ -15,9 +15,19 @@ public class WebSocketController {
         this.dynamicWebSocketRegistry = dynamicWebSocketRegistry;
     }
 
-    @GetMapping("/socket/{socketName}")
-    public ResponseEntity<String> createSocket(@PathVariable String socketName) {
-        boolean isRegistered = dynamicWebSocketRegistry.registerEndpoint(socketName);
+    @GetMapping("/codesocket/{socketName}")
+    public ResponseEntity<String> createcodeSocket(@PathVariable String socketName) {
+        boolean isRegistered = dynamicWebSocketRegistry.registerCodeEndpoint(socketName);
+        if (isRegistered) {
+            return ResponseEntity.ok("WebSocket endpoint '/" + socketName + "' created successfully.");
+        } else {
+            return ResponseEntity.ok("WebSocket endpoint '/" + socketName + "' already exists.");
+        }
+    }
+
+    @GetMapping("/drawsocket/{socketName}")
+    public ResponseEntity<String> createDrawSocket(@PathVariable String socketName) {
+        boolean isRegistered = dynamicWebSocketRegistry.registerDrawEndpoint(socketName);
         if (isRegistered) {
             return ResponseEntity.ok("WebSocket endpoint '/" + socketName + "' created successfully.");
         } else {

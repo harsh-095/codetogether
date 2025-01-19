@@ -27,7 +27,7 @@ connectButton.addEventListener('click', async () => {
 
     try {
         // Create socket via REST API
-        const response = await fetch(`http://${serverAddress}:${serverPort}/socket/${socketName}`, {
+        const response = await fetch(`http://${serverAddress}:${serverPort}/codesocket/${socketName}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ function connectToSocket(socketName) {
         socket.close();
     }
 
-    socket = new WebSocket(`ws://${serverAddress}:${serverPort}/chat/${socketName}`);
+    socket = new WebSocket(`ws://${serverAddress}:${serverPort}/code/${socketName}`);
 
     socket.onopen = () => {
         console.log(`Connected to socket: ${socketName}`);

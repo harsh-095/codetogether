@@ -5,6 +5,7 @@
     "build": "shx cp -r ./node_modules/quill/dist src/main/resources/static/libs/quill"
   },
   "dependencies": {
+    "konva": "^9.3.18",
     "quill": "^2.0.3"
   },
   "devDependencies": {

@@ -11,25 +11,25 @@ public class FrontendController {
         return "index";
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
+//    @GetMapping("/test")
+//    public String test() {
+//        return "test";
+//    }
 
     @GetMapping("/home")
     public String home() {
         return "index";
     }
-
-    @GetMapping("/code")
-    public String code() {
-        return "code";
-    }
-
-    @GetMapping("/chat")
-    public String chat() {
-        return "chat";
-    }
+//
+//    @GetMapping("/code")
+//    public String code() {
+//        return "code";
+//    }
+//
+//    @GetMapping("/chat")
+//    public String chat() {
+//        return "chat";
+//    }
 
     @GetMapping("/draw")
     public String draw() {
