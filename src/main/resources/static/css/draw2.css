@@ -1,0 +1,108 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Toolbar styling */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar input,
+.toolbar button,
+.toolbar label {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.toolbar input[type="color"] {
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.toolbar input[type="range"] {
+    width: 100px;
+}
+
+.toolbar button {
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.toolbar button:hover {
+    background-color: #0056b3;
+}
+
+/* Drawing area styling */
+#container {
+    border: 2px solid #333;
+    width: 90%; /* Make it responsive */
+    max-width: 800px;
+    height: 500px; /* Reduced height for smaller screens */
+    overflow: hidden; /* Prevent content from going out of bounds */
+    touch-action: none; /* Disable touch gestures */
+    margin-bottom: 20px;
+    background-color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .toolbar {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .toolbar input,
+    .toolbar button,
+    .toolbar label {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    .toolbar input[type="range"] {
+        width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .toolbar {
+        padding: 5px;
+    }
+
+    .toolbar input,
+    .toolbar button,
+    .toolbar label {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    #container {
+        height: 400px; /* Further reduced height for very small screens */
+    }
+}
