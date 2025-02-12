@@ -2,6 +2,8 @@ package com.harshapps.codetogether.handler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.socket.*;
 
 import java.io.IOException;
@@ -10,15 +12,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class SocketConnectionHandler implements WebSocketHandler {
+public class CodeSocketConnectionHandler implements WebSocketHandler {
 
     private final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
     private WebSocketSession primarySession = null;
     private WebSocketMessage<?> currentMessage = null;
+    private static final Logger logger = LogManager.getLogger(CodeSocketConnectionHandler.class);
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         System.out.println(session.getId() + " Connected");
+        logger.info("{} Connected", session.getId());
+        logger.error("Error= {} Connected", session.getId());
+        logger.error("Error= {} Connected", session.getId(),new RuntimeException("New_Exc"));
+        logger.trace("Trace= {} Connected", session.getId());
         webSocketSessions.add(session);
 
         // Assign the first session as the primary session
@@ -55,8 +62,9 @@ public class SocketConnectionHandler implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         String payload = (String) message.getPayload();
         Map<String, Object> data = new ObjectMapper().readValue(payload, new TypeReference<>() {});
-        System.out.println("Message received= "+data);
-        if (session == primarySession) {
+
+        if ("update".equals(data.get("type"))) {
+            if (session == primarySession) {
                 currentMessage = message;
                 // Primary session sends full content to all other sessions
                 for (WebSocketSession webSocketSession : webSocketSessions) {
@@ -70,6 +78,7 @@ public class SocketConnectionHandler implements WebSocketHandler {
                     primarySession.sendMessage(new TextMessage(payload));
                 }
             }
+        }
     }
 
     private void sendToSession(WebSocketSession session, Map<String, Object> data) {
@@ -87,6 +96,6 @@ public class SocketConnectionHandler implements WebSocketHandler {
 
     @Override
     public boolean supportsPartialMessages() {
-        return true;
+        return false;
     }
 }

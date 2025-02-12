@@ -1,7 +1,7 @@
 package com.harshapps.codetogether.service;
 
-import com.harshapps.codetogether.handler.ChatSocketConnectionHandler;
-import com.harshapps.codetogether.handler.SocketConnectionHandler;
+import com.harshapps.codetogether.handler.CodeSocketConnectionHandler;
+import com.harshapps.codetogether.handler.DrawSocketConnectionHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
@@ -26,7 +26,7 @@ public class DynamicWebSocketRegistry {
             return false; // Endpoint already exists
         }
 
-        WebSocketHandler handler = new ChatSocketConnectionHandler();
+        WebSocketHandler handler = new CodeSocketConnectionHandler();
         WebSocketHttpRequestHandler requestHandler = new WebSocketHttpRequestHandler(handler, new DefaultHandshakeHandler());
 
         handlers.put(socketName, requestHandler);
@@ -45,7 +45,7 @@ public class DynamicWebSocketRegistry {
             return false; // Endpoint already exists
         }
 
-        WebSocketHandler handler = new SocketConnectionHandler();
+        WebSocketHandler handler = new DrawSocketConnectionHandler();
         WebSocketHttpRequestHandler requestHandler = new WebSocketHttpRequestHandler(handler, new DefaultHandshakeHandler());
 
         handlers.put(socketName, requestHandler);

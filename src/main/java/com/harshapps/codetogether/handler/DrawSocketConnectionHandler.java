@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class ChatSocketConnectionHandler implements WebSocketHandler {
+public class DrawSocketConnectionHandler implements WebSocketHandler {
 
     private final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
     private WebSocketSession primarySession = null;
@@ -55,9 +55,8 @@ public class ChatSocketConnectionHandler implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         String payload = (String) message.getPayload();
         Map<String, Object> data = new ObjectMapper().readValue(payload, new TypeReference<>() {});
-
-        if ("update".equals(data.get("type"))) {
-            if (session == primarySession) {
+        System.out.println("Message received= "+data);
+        if (session == primarySession) {
                 currentMessage = message;
                 // Primary session sends full content to all other sessions
                 for (WebSocketSession webSocketSession : webSocketSessions) {
@@ -71,7 +70,6 @@ public class ChatSocketConnectionHandler implements WebSocketHandler {
                     primarySession.sendMessage(new TextMessage(payload));
                 }
             }
-        }
     }
 
     private void sendToSession(WebSocketSession session, Map<String, Object> data) {
@@ -89,6 +87,6 @@ public class ChatSocketConnectionHandler implements WebSocketHandler {
 
     @Override
     public boolean supportsPartialMessages() {
-        return false;
+        return true;
     }
 }
