@@ -20,6 +20,11 @@ public class FrontendController {
     public String home() {
         return "index";
     }
+
+    @GetMapping("/log")
+    public String log() {
+        return "log";
+    }
 //
 //    @GetMapping("/code")
 //    public String code() {

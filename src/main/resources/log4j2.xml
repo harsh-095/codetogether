@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="WARN" packages="com.harshapps.codetogether.logging">
     <Appenders>
         <!-- Console for INFO, DEBUG, TRACE (No WARN, ERROR) -->
         <Console name="InfoConsole" target="SYSTEM_OUT">
@@ -14,12 +14,19 @@
             <PatternLayout pattern="{'timestamp':'%d{ISO8601}', 'level':'%p', 'logger':'%c', 'line':'%l', 'message':'%m', 'error':'%ex{full}'}%n"/>
             <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
         </Console>
+
+        <Appender name="LogStream">
+            <PatternLayout pattern="{'timestamp':'%d{ISO8601}', 'level':'%p', 'logger':'%c', 'line':'%l', 'message':'%m'}%n"/>
+        </Appender>
     </Appenders>
+
+
 
     <Loggers>
         <Root level="info">
             <AppenderRef ref="InfoConsole"/>
             <AppenderRef ref="ErrorConsole"/>
+            <AppenderRef ref="LogStream"/>
         </Root>
     </Loggers>
 

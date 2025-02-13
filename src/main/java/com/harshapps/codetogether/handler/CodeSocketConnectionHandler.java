@@ -23,9 +23,8 @@ public class CodeSocketConnectionHandler implements WebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         System.out.println(session.getId() + " Connected");
         logger.info("{} Connected", session.getId());
-        logger.error("Error= {} Connected", session.getId());
-        logger.error("Error= {} Connected", session.getId(),new RuntimeException("New_Exc"));
-        logger.trace("Trace= {} Connected", session.getId());
+        logger.error("{} Connected", session.getId());
+        logger.warn("{} Connected", session.getId());
         webSocketSessions.add(session);
 
         // Assign the first session as the primary session
@@ -61,6 +60,7 @@ public class CodeSocketConnectionHandler implements WebSocketHandler {
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         String payload = (String) message.getPayload();
+        System.out.println("Payload="+payload);
         Map<String, Object> data = new ObjectMapper().readValue(payload, new TypeReference<>() {});
 
         if ("update".equals(data.get("type"))) {
