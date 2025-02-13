@@ -1,6 +1,6 @@
 let socket;
-// const serverAddress = '3.109.3.103';
-const serverAddress = 'localhost';
+ const serverAddress = '3.109.3.103';
+//const serverAddress = 'localhost';
 const serverPort = 9000;
 var logContainer = document.getElementById("log-container");
 
