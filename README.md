@@ -18,6 +18,7 @@ To-Do:
 2. Chat Page
 3. Admin Dashboard
 4. Index Page
+5. Login/Register
 
 Upcoming:
 1. Store Chats
