@@ -64,7 +64,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: codetogether-javadoc
-        path: target/reports/apidocs
+        path: target/reports
     - name: Verify ls
       run: ls
       
@@ -104,7 +104,7 @@ jobs:
     - name: Transfer JAR to EC2
       run: |
         scp -o StrictHostKeyChecking=no -i aws-key.pem codetogether-0.0.1-SNAPSHOT.jar ec2-user@3.109.3.103:/home/ec2-user/
-        scp -r -o StrictHostKeyChecking=no -i aws-key.pem codetogether-javadoc ec2-user@3.109.3.103:/home/ec2-user/
+        scp -r -o StrictHostKeyChecking=no -i aws-key.pem apidocs ec2-user@3.109.3.103:/home/ec2-user/
 
     - name: SSH into EC2 and restart application
       run: |
@@ -112,4 +112,8 @@ jobs:
         cd /home/ec2-user/
         pkill -f java || true
         nohup java -jar /home/ec2-user/codetogether-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+        
+        pkill -f "python3 -m http.server" || true
+        cd /home/ec2-user/apidocs
+        nohup python3 -m http.server 8080 > javadoc.log 2>&1 &
         EOF
