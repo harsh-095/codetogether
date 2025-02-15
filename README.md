@@ -15,12 +15,11 @@ Progress:
 6. Added Swagger and Javadoc and deployed
 
 To-Do:
-1. Add Correct Logging messages
-2. Swagger (Use Jakarta)
-3. Chat Page
-4. Admin Dashboard
-5. Index Page
-6. Login/Register
+1. Add Correct Logging messages/ Documentation
+2. Chat Page
+3. Admin Dashboard
+4. Index Page
+5. Login/Register
 
 Upcoming:
 1. Store Chats
