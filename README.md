@@ -24,3 +24,6 @@ To-Do:
 Upcoming:
 1. Store Chats
 2. Plan UI and Deployment
+
+Swagger Api Doc:
+http://3.109.3.103:9000/swagger-ui/index.html
