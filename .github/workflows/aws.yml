@@ -64,7 +64,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: codetogether-javadoc
-        path: target/site/apidocs
+        path: target/reports/apidocs
     - name: Verify ls
       run: ls
       
