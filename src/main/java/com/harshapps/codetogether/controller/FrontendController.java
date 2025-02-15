@@ -1,9 +1,12 @@
 package com.harshapps.codetogether.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@Tag(name = "Frontend Controller", description = "Exposes Endpoint for Frontend Pages")
 public class FrontendController {
 
     @GetMapping("/")
@@ -22,6 +25,7 @@ public class FrontendController {
     }
 
     @GetMapping("/log")
+    @Operation(summary = "Live Log Pages", description = "Pages to fetch all live logs")
     public String log() {
         return "log";
     }

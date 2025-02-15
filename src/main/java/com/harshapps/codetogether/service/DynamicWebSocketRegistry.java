@@ -2,6 +2,8 @@ package com.harshapps.codetogether.service;
 
 import com.harshapps.codetogether.handler.CodeSocketConnectionHandler;
 import com.harshapps.codetogether.handler.DrawSocketConnectionHandler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
@@ -11,9 +13,12 @@ import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Service for Dynamic Web Socket Registry
+ */
 @Service
 public class DynamicWebSocketRegistry {
-
+// TODO: Add good looging
     private final Map<String, WebSocketHttpRequestHandler> handlers = new HashMap<>();
     private final SimpleUrlHandlerMapping handlerMapping;
 
@@ -21,6 +26,12 @@ public class DynamicWebSocketRegistry {
         this.handlerMapping = handlerMapping;
     }
 
+    /**
+     * Creates websockets dynamically
+     *
+     * @param socketName name of the socket
+     * @return boolean type whether registered or not.
+     */
     public synchronized boolean registerCodeEndpoint(String socketName) {
         if (handlers.containsKey(socketName)) {
             return false; // Endpoint already exists
