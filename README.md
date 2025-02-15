@@ -12,6 +12,7 @@ Progress:
 3. Pages for Code & Draw (Basic) are ready
 4. Added Logging
 5. Added a static page for Live Logging
+6. Added Swagger and Javadoc and deployed
 
 To-Do:
 1. Add Correct Logging messages
