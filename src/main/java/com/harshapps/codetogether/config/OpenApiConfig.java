@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration class for Open Api for Swagger
+ */
 @Configuration
 @OpenAPIDefinition(
         info = @Info(

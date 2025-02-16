@@ -1,17 +1,17 @@
-package com.harshapps.codetogether.handler;
+package com.harshapps.codetogether.socketHandler;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Component;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.socket.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-
+/**
+ * Web Socket Handler
+ */
 public class LogSocketHandler implements WebSocketHandler {
 
     private static final LogSocketHandler INSTANCE = new LogSocketHandler();
@@ -22,24 +22,44 @@ public class LogSocketHandler implements WebSocketHandler {
         return INSTANCE;
     }
 
+    private static final Logger logger = LogManager.getLogger(LogSocketHandler.class);
+
     private final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
 
+    /**
+     * Function to be executed after Session is connected
+     * @param session Refers to Session which is connected
+     * @throws IOException Exceptions while sending messages
+     */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-        System.out.println(session.getId() + " Connected");
         webSocketSessions.add(session);
+        logger.info("Log Session: {} Connected", session.getId());
     }
 
+    /**
+     * Function to be executed after Session is disconnected
+     * @param session Refers to Session which is disconnected
+     */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        System.out.println(session.getId() + " Disconnected");
         webSocketSessions.remove(session);
+        logger.info("Log Session: {} Disconnected", session.getId());
     }
 
+    /**
+     * Handles Messages in sessions
+     * @param session Refers to Session which is receives message
+     * @throws IOException Exceptions while sending messages
+     */
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
     }
 
+    /**
+     * To send message to the session
+     * @param msg The message to be sent
+     */
     public void send(String msg) {
         for(WebSocketSession session:webSocketSessions) {
             try {
@@ -52,7 +72,7 @@ public class LogSocketHandler implements WebSocketHandler {
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) {
-        System.err.println("Transport error: " + exception.getMessage());
+        logger.error("Transport error: {}", exception.getMessage());
     }
 
     @Override

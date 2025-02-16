@@ -1,4 +1,4 @@
-package com.harshapps.codetogether.handler;
+package com.harshapps.codetogether.socketHandler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,25 +12,36 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Code Socket Handler
+ */
 public class CodeSocketConnectionHandler implements WebSocketHandler {
 
     private final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
     private WebSocketSession primarySession = null;
     private WebSocketMessage<?> currentMessage = null;
     private static final Logger logger = LogManager.getLogger(CodeSocketConnectionHandler.class);
+    private String socketName;
 
+    public CodeSocketConnectionHandler(String socketName){
+        this.socketName = socketName;
+    }
+
+    /**
+     * Function to be executed after Session is connected
+     * @param session Refers to Session which is connected
+     * @throws IOException Exceptions while sending messages
+     */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-        System.out.println(session.getId() + " Connected");
-        logger.info("{} Connected", session.getId());
-        logger.error("{} Connected", session.getId());
-        logger.warn("{} Connected", session.getId());
+        logger.info("CodeSession: {} Connected for SocketName: {}", session.getId(), socketName);
         webSocketSessions.add(session);
 
         // Assign the first session as the primary session
         if (primarySession == null) {
             primarySession = session;
             sendToSession(session, Map.of("type", "SetPrimary"));
+            logger.info("CodeSession: {} is set as PrimarySession for SocketName: {}", session.getId(), socketName);
         }
         else{
             if(currentMessage!=null) {
@@ -39,30 +50,38 @@ public class CodeSocketConnectionHandler implements WebSocketHandler {
         }
     }
 
+    /**
+     * Function to be executed after Session is disconnected
+     * @param session Refers to Session which is disconnected
+     */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        System.out.println(session.getId() + " Disconnected");
+        logger.info("CodeSession: {} Disconnected for SocketName: {}", session.getId(), socketName);
         webSocketSessions.remove(session);
-
         // Handle primary session disconnection
         if (primarySession == session) {
             if (!webSocketSessions.isEmpty()) {
                 // Assign the next session as the primary session
                 primarySession = webSocketSessions.get(0);
                 sendToSession(primarySession, Map.of("type", "SetPrimary"));
+                logger.info("PrimarySession:{} closed ; CodeSession: {} is set as new PrimarySession for SocketName: {}", session.getId(), primarySession.getId(), socketName);
             } else {
                 primarySession = null;
                 currentMessage = null;// No sessions left
+                logger.info("PrimarySession:{} closed ; No sessions left to set as new PrimarySession for SocketName: {}", session.getId(), socketName);
             }
         }
     }
 
+    /**
+     * Handles Messages in sessions
+     * @param session Refers to Session which is receives message
+     * @throws IOException Exceptions while sending messages
+     */
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         String payload = (String) message.getPayload();
-        System.out.println("Payload="+payload);
         Map<String, Object> data = new ObjectMapper().readValue(payload, new TypeReference<>() {});
-
         if ("update".equals(data.get("type"))) {
             if (session == primarySession) {
                 currentMessage = message;
@@ -81,17 +100,22 @@ public class CodeSocketConnectionHandler implements WebSocketHandler {
         }
     }
 
+    /**
+     * To send message to the session
+     * @param session Session to which msg has to be sent
+     * @param data The message to be sent
+     */
     private void sendToSession(WebSocketSession session, Map<String, Object> data) {
         try {
             session.sendMessage(new TextMessage(new ObjectMapper().writeValueAsString(data)));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error occurred while sending message to code session: {} ; error: {} for SocketName: {}",session,e, socketName,e);
         }
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) {
-        System.err.println("Transport error: " + exception.getMessage());
+        logger.error("Error occurred while sending message to code session: {} ; error: {} for SocketName: {}",session,exception, socketName,exception);
     }
 
     @Override

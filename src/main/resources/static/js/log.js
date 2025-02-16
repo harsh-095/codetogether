@@ -38,10 +38,8 @@ return logObj;
 }
 socket.onmessage = function(event) {
     try {
-                let logMessage = event.data.trim(); // Trim any leading/trailing spaces
-//                logMessage = "{'name': 'John', 'age': '30', 'city': 'New York'}";
+                let logMessage = event.data.trim();
                 console.log("logMessage=",logMessage);
-                console.log("event=",event);
                 let logMap = getLogMap(logMessage)
                 console.log("logMap =",logMap);
                 if (logMessage.startsWith("{") && logMessage.endsWith("}")) {
@@ -55,7 +53,13 @@ socket.onmessage = function(event) {
                     row.innerHTML = `
                         <td>${logMap.timestamp}</td>
                         <td>${logMap.level}</td>
-                        <td>${logMap.message} (${logMap.logger} - ${logMap.line})</td>
+                        <td>
+                            <div>
+                                Message: ${logMap.message} <br/>
+                                Logger: ${logMap.logger} <br/>
+                                Line: ${logMap.line}
+                            </div>
+                        </td>
                     `;
 
                     logContainer.appendChild(row);

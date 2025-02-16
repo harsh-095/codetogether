@@ -4,19 +4,19 @@
         <!-- Console for INFO, DEBUG, TRACE (No WARN, ERROR) -->
         <Console name="InfoConsole" target="SYSTEM_OUT">
 <!--            <PatternLayout pattern="timestamp: %d{yyyy-MM-dd HH:mm:ss} Infoooooo [%t] %highlight{%-5level} %logger{36} - %msg%n"/>-->
-            <PatternLayout pattern="{'timestamp':'%d{ISO8601}', 'level':'%p', 'logger':'%c', 'line':'%l', 'message':'%m'}%n"/>
+            <PatternLayout pattern="{'message':'%m', 'timestamp':'%d{ISO8601}', 'level':'%p', 'logger':'%c', 'line':'%l'}%n"/>
             <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="ACCEPT"/>
         </Console>
 
         <!-- Console for ERROR and FATAL logs -->
         <Console name="ErrorConsole" target="SYSTEM_ERR">
 <!--            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} Errrrrrr [%t] %highlight{%-5level}{red} %logger{36} - %msg %ex{full}%n"/>-->
-            <PatternLayout pattern="{'timestamp':'%d{ISO8601}', 'level':'%p', 'logger':'%c', 'line':'%l', 'message':'%m', 'error':'%ex{full}'}%n"/>
+            <PatternLayout pattern="{'message':'%m', 'timestamp':'%d{ISO8601}', 'level':'%p', 'logger':'%c', 'line':'%l', 'error':'%ex{full}'}%n"/>
             <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
         </Console>
 
         <Appender name="LogStream">
-            <PatternLayout pattern="{'timestamp':'%d{ISO8601}', 'level':'%p', 'logger':'%c', 'line':'%l', 'message':'%m'}%n"/>
+            <PatternLayout pattern="{'message':'%m', 'timestamp':'%d{ISO8601}', 'level':'%p', 'logger':'%c', 'line':'%l'}%n"/>
         </Appender>
     </Appenders>
 
