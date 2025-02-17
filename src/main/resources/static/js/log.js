@@ -4,7 +4,7 @@ let socket;
 const serverPort = 9000;
 var logContainer = document.getElementById("log-container");
 
-socket = new WebSocket(`ws://${serverAddress}:${serverPort}/logs`);
+socket = new WebSocket(`ws://${serverAddress}:${serverPort}/logsocket`);
 
 socket.onopen = () => {
     console.log(`Connected to Logger socket`);

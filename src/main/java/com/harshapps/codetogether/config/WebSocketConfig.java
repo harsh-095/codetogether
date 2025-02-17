@@ -1,6 +1,9 @@
 package com.harshapps.codetogether.config;
 
+import com.harshapps.codetogether.service.AdminService;
+import com.harshapps.codetogether.socketHandler.AdminSocketHandler;
 import com.harshapps.codetogether.socketHandler.LogSocketHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
@@ -22,13 +25,20 @@ public class WebSocketConfig implements WebSocketConfigurer {
      */
     private final LogSocketHandler logSocketHandler = LogSocketHandler.getInstance();
 
+    private final AdminSocketHandler adminSocketHandler = AdminSocketHandler.getInstance();
+
+    public WebSocketConfig(AdminService adminService) {
+        this.logSocketHandler.setAdminService(adminService);
+    }
+
     /**
      * To Register Web Socket Handlers with a path
      * @param registry Web Socket Registry
      */
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(logSocketHandler, "/logs").setAllowedOrigins("*");
+        registry.addHandler(logSocketHandler, "/logsocket").setAllowedOrigins("*");
+        registry.addHandler(adminSocketHandler, "/adminsocket").setAllowedOrigins("*");
     }
 
     /**

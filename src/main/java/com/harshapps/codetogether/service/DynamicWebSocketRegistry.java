@@ -22,9 +22,11 @@ public class DynamicWebSocketRegistry {
     private final Map<String, WebSocketHttpRequestHandler> handlers = new HashMap<>();
     private final SimpleUrlHandlerMapping handlerMapping;
     private static final Logger logger = LogManager.getLogger(DynamicWebSocketRegistry.class);
+    private final AdminService adminService;
 
-    public DynamicWebSocketRegistry(SimpleUrlHandlerMapping handlerMapping) {
+    public DynamicWebSocketRegistry(SimpleUrlHandlerMapping handlerMapping, AdminService adminService) {
         this.handlerMapping = handlerMapping;
+        this.adminService = adminService;
     }
 
     /**
@@ -36,11 +38,11 @@ public class DynamicWebSocketRegistry {
     public synchronized boolean registerCodeEndpoint(String socketName) {
         logger.info("Invoking registerCodeEndpoint for socket:{}",socketName);
         if (handlers.containsKey(socketName)) {
-            logger.info("Handler Exists for socket:{}",socketName);
+            logger.info("Code Handler Exists for socket:{}",socketName);
             return false; // Endpoint already exists
         }
-        logger.info("Creating Handler for socket:{}",socketName);
-        WebSocketHandler handler = new CodeSocketConnectionHandler(socketName);
+        logger.info("Creating Code Handler for socket:{}",socketName);
+        WebSocketHandler handler = new CodeSocketConnectionHandler(socketName, adminService);
         WebSocketHttpRequestHandler requestHandler = new WebSocketHttpRequestHandler(handler, new DefaultHandshakeHandler());
 
         handlers.put(socketName, requestHandler);
@@ -63,11 +65,11 @@ public class DynamicWebSocketRegistry {
     public synchronized boolean registerDrawEndpoint(String socketName) {
         logger.info("Invoking registerDrawEndpoint for socket:{}",socketName);
         if (handlers.containsKey(socketName)) {
-            logger.info("Handler Exists for socket:{}",socketName);
+            logger.info("Draw Handler Exists for socket:{}",socketName);
             return false; // Endpoint already exists
         }
-        logger.info("Creating Handler for socket:{}",socketName);
-        WebSocketHandler handler = new DrawSocketConnectionHandler(socketName);
+        logger.info("Creating Draw Handler for socket:{}",socketName);
+        WebSocketHandler handler = new DrawSocketConnectionHandler(socketName, adminService);
         WebSocketHttpRequestHandler requestHandler = new WebSocketHttpRequestHandler(handler, new DefaultHandshakeHandler());
 
         handlers.put(socketName, requestHandler);

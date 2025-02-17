@@ -1,6 +1,8 @@
 package com.harshapps.codetogether.socketHandler;
 
-import com.harshapps.codetogether.service.AdminService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harshapps.codetogether.model.HandlerData;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,27 +11,27 @@ import org.springframework.web.socket.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Web Socket Handler
  */
-public class LogSocketHandler implements WebSocketHandler {
+public class AdminSocketHandler implements WebSocketHandler {
 
-    private static final LogSocketHandler INSTANCE = new LogSocketHandler();
+    private static final AdminSocketHandler INSTANCE = new AdminSocketHandler();
 
-    private LogSocketHandler() {} // Private constructor
+    private AdminSocketHandler() {} // Private constructor
 
-    public static LogSocketHandler getInstance() {
+    public static AdminSocketHandler getInstance() {
         return INSTANCE;
     }
 
-    private static final Logger logger = LogManager.getLogger(LogSocketHandler.class);
+    private static final Logger logger = LogManager.getLogger(AdminSocketHandler.class);
 
     private final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
 
-    @Setter
-    private AdminService adminService = null;
+    private HandlerData currentHandlerData = new HandlerData(new HashMap<>(), new HashMap<>(), new HandlerData.SessionData(0));
 
     /**
      * Function to be executed after Session is connected
@@ -39,10 +41,8 @@ public class LogSocketHandler implements WebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         webSocketSessions.add(session);
-        if(adminService!=null){
-            adminService.addLogSession();
-        }
-        logger.info("Log Session: {} Connected", session.getId());
+        send(session,currentHandlerData);
+        logger.info("Admin Session: {} Connected", session.getId());
     }
 
     /**
@@ -52,8 +52,7 @@ public class LogSocketHandler implements WebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         webSocketSessions.remove(session);
-        logger.info("Log Session: {} Disconnected", session.getId());
-        adminService.removeLogSession();
+        logger.info("Admin Session: {} Disconnected", session.getId());
     }
 
     /**
@@ -67,16 +66,20 @@ public class LogSocketHandler implements WebSocketHandler {
 
     /**
      * To send message to the session
-     * @param msg The message to be sent
+     * @param handlerData The message to be sent
      */
-    public void send(String msg) {
+    public void send(HandlerData handlerData) throws IOException {
+        currentHandlerData = handlerData;
         for(WebSocketSession session:webSocketSessions) {
-            try {
-                session.sendMessage(new TextMessage(msg));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            send(session, handlerData);
         }
+    }
+
+    public void send(WebSocketSession session, HandlerData handlerData) throws IOException {
+        currentHandlerData = handlerData;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(handlerData);
+        session.sendMessage(new TextMessage(json));
     }
 
     @Override

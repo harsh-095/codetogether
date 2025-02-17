@@ -2,6 +2,7 @@ package com.harshapps.codetogether.socketHandler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harshapps.codetogether.service.AdminService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.socket.*;
@@ -21,10 +22,12 @@ public class DrawSocketConnectionHandler implements WebSocketHandler {
     private WebSocketSession primarySession = null;
     private WebSocketMessage<?> currentMessage = null;
     private static final Logger logger = LogManager.getLogger(DrawSocketConnectionHandler.class);
-    private String socketName;
+    private final String socketName;
+    private final AdminService adminService;
 
-    public DrawSocketConnectionHandler(String socketName){
+    public DrawSocketConnectionHandler(String socketName, AdminService adminService){
         this.socketName = socketName;
+        this.adminService = adminService;
     }
 
     /**
@@ -36,7 +39,7 @@ public class DrawSocketConnectionHandler implements WebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         logger.info("DrawSession: {} Connected for SocketName: {}", session.getId(), socketName);
         webSocketSessions.add(session);
-
+        adminService.addDrawHandler(socketName);
         // Assign the first session as the primary session
         if (primarySession == null) {
             primarySession = session;
@@ -58,7 +61,7 @@ public class DrawSocketConnectionHandler implements WebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         logger.info("DrawSession: {} Disconnected for SocketName: {}", session.getId(), socketName);
         webSocketSessions.remove(session);
-
+        adminService.removeDrawHandler(socketName);
         // Handle primary session disconnection
         if (primarySession == session) {
             if (!webSocketSessions.isEmpty()) {

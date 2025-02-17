@@ -6,7 +6,7 @@ Main Features:
 2. Code Chat i.e share snippets
 3. Draw Feature (Live Together)
 
-Progress:
+Completed:
 1. Added Sockets To Spring App
 2. Dynamic Socket Connection
 3. Pages for Code & Draw (Basic) are ready
@@ -15,6 +15,9 @@ Progress:
 6. Added Swagger and Javadoc and deployed
 7. Added Logging & Documentation
 
+In Progress:
+1. Admin Dashboard (BE)
+
 To-Do:
 1. Chat Page
 2. Admin Dashboard
@@ -22,7 +25,7 @@ To-Do:
 4. Login/Register
 5. Exception Handling
 
-Upcoming:
+In Plan:
 1. Store Chats
 2. Plan UI and Deployment
 
@@ -36,8 +39,10 @@ JavaDoc In Local:
 ~~~
 //To generate JavaDoc
 mvn javadoc:javadoc
+
 // To navigate to apidocs
 cd target\reports\apidocs
+
 // To start page
 start index.html
 ~~~
